@@ -11,7 +11,18 @@ pub struct Ticket {
 
 impl Ticket {
     pub fn new(title: String, description: String, status: String) -> Ticket {
-        if title.is_empty() {
+        if !Self::valid_input(&title, &description, &status) {
+            panic!("Input not valid");
+        }
+        Ticket {
+            title,
+            description,
+            status,
+        }
+    }
+
+    fn valid_input(title: &str, description: &str, status: &str) -> bool {
+        if Self::valid_title(title) {
             panic!("Title cannot be empty");
         }
         if title.len() > 50 {
@@ -26,12 +37,14 @@ impl Ticket {
         if status != "To-Do" && status != "In Progress" && status != "Done" {
             panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
         }
+        true
+    }
 
-        Ticket {
-            title,
-            description,
-            status,
-        }
+    fn valid_title(title: &str) -> bool {
+        title.is_empty()
+    }
+    fn valid_title(title: &str) -> bool {
+        title.is_empty()
     }
 
     pub fn title(&self) -> &String {
@@ -50,7 +63,7 @@ impl Ticket {
 #[cfg(test)]
 mod tests {
     use super::Ticket;
-    use common::{overly_long_description, overly_long_title, valid_description, valid_title};
+    use common::{ overly_long_description, overly_long_title, valid_description, valid_title };
 
     #[test]
     fn works() {
@@ -79,15 +92,17 @@ mod tests {
     #[test]
     #[should_panic(expected = "Title cannot be longer than 50 bytes")]
     fn title_cannot_be_longer_than_fifty_chars() {
-        Ticket::new(valid_title(), valid_description(), "To-Do".into())
-            .set_title(overly_long_title())
+        Ticket::new(valid_title(), valid_description(), "To-Do".into()).set_title(
+            overly_long_title()
+        )
     }
 
     #[test]
     #[should_panic(expected = "Description cannot be longer than 500 bytes")]
     fn description_cannot_be_longer_than_500_chars() {
-        Ticket::new(valid_title(), valid_description(), "To-Do".into())
-            .set_description(overly_long_description())
+        Ticket::new(valid_title(), valid_description(), "To-Do".into()).set_description(
+            overly_long_description()
+        )
     }
 
     #[test]
