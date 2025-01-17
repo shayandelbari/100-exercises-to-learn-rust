@@ -11,9 +11,7 @@ pub struct Ticket {
 
 impl Ticket {
     pub fn new(title: String, description: String, status: String) -> Ticket {
-        if !Self::valid_input(&title, &description, &status) {
-            panic!("Input not valid");
-        }
+        Self::valid_input(&title, &description, &status);
         Ticket {
             title,
             description,
@@ -21,30 +19,38 @@ impl Ticket {
         }
     }
 
-    fn valid_input(title: &str, description: &str, status: &str) -> bool {
-        if Self::valid_title(title) {
+    // I am aware that this is ridiculously verbs but it's fine for this exercise. I guess :|
+    fn valid_input(title: &str, description: &str, status: &str) {
+        Self::valid_title_content(title);
+        Self::valid_title_length(title);
+        Self::valid_description_content(description);
+        Self::valid_description_length(description);
+        Self::valid_status(status);
+    }
+    fn valid_title_content(title: &str) {
+        if title.is_empty() {
             panic!("Title cannot be empty");
         }
+    }
+    fn valid_title_length(title: &str) {
         if title.len() > 50 {
             panic!("Title cannot be longer than 50 bytes");
         }
+    }
+    fn valid_description_content(description: &str) {
         if description.is_empty() {
             panic!("Description cannot be empty");
         }
+    }
+    fn valid_description_length(description: &str) {
         if description.len() > 500 {
             panic!("Description cannot be longer than 500 bytes");
         }
+    }
+    fn valid_status(status: &str) {
         if status != "To-Do" && status != "In Progress" && status != "Done" {
             panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
         }
-        true
-    }
-
-    fn valid_title(title: &str) -> bool {
-        title.is_empty()
-    }
-    fn valid_title(title: &str) -> bool {
-        title.is_empty()
     }
 
     pub fn title(&self) -> &String {
@@ -57,6 +63,23 @@ impl Ticket {
 
     pub fn status(&self) -> &String {
         &self.status
+    }
+
+    pub fn set_title(&mut self, title: String) {
+        Self::valid_title_length(&title);
+        Self::valid_title_content(&title);
+        self.title = title;
+    }
+
+    pub fn set_description(&mut self, description: String) {
+        Self::valid_description_content(&description);
+        Self::valid_description_length(&description);
+        self.description = description;
+    }
+
+    pub fn set_status(&mut self, status: String) {
+        Self::valid_status(&status);
+        self.status = status;
     }
 }
 
