@@ -1,7 +1,7 @@
 // TODO: Flesh out the `WeekTemperatures` struct and its method implementations to pass the tests.
 
 pub struct WeekTemperatures {
-    // TODO
+    temperature: [Option<i32>; 7],
 }
 
 pub enum Weekday {
@@ -16,15 +16,31 @@ pub enum Weekday {
 
 impl WeekTemperatures {
     pub fn new() -> Self {
-        todo!()
+        WeekTemperatures {
+            temperature: [None; 7],
+        }
     }
 
     pub fn get_temperature(&self, day: Weekday) -> Option<i32> {
-        todo!()
+        let index = weekday_index(&day);
+        self.temperature[index]
     }
 
     pub fn set_temperature(&mut self, day: Weekday, temperature: i32) {
-        todo!()
+        let index = weekday_index(&day);
+        self.temperature[index] = Some(temperature);
+    }
+}
+
+fn weekday_index(day: &Weekday) -> usize {
+    match day {
+        Weekday::Monday => 0,
+        Weekday::Tuesday => 1,
+        Weekday::Wednesday => 2,
+        Weekday::Thursday => 3,
+        Weekday::Friday => 4,
+        Weekday::Saturday => 5,
+        Weekday::Sunday => 6,
     }
 }
 
@@ -58,23 +74,11 @@ mod tests {
         week_temperatures.set_temperature(Weekday::Sunday, 55);
 
         assert_eq!(week_temperatures.get_temperature(Weekday::Monday), Some(25));
-        assert_eq!(
-            week_temperatures.get_temperature(Weekday::Tuesday),
-            Some(30)
-        );
-        assert_eq!(
-            week_temperatures.get_temperature(Weekday::Wednesday),
-            Some(35)
-        );
-        assert_eq!(
-            week_temperatures.get_temperature(Weekday::Thursday),
-            Some(40)
-        );
+        assert_eq!(week_temperatures.get_temperature(Weekday::Tuesday), Some(30));
+        assert_eq!(week_temperatures.get_temperature(Weekday::Wednesday), Some(35));
+        assert_eq!(week_temperatures.get_temperature(Weekday::Thursday), Some(40));
         assert_eq!(week_temperatures.get_temperature(Weekday::Friday), Some(45));
-        assert_eq!(
-            week_temperatures.get_temperature(Weekday::Saturday),
-            Some(50)
-        );
+        assert_eq!(week_temperatures.get_temperature(Weekday::Saturday), Some(50));
         assert_eq!(week_temperatures.get_temperature(Weekday::Sunday), Some(55));
     }
 }
